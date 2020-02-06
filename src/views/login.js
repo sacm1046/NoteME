@@ -1,18 +1,12 @@
 import React, { useContext } from 'react';
 import { Context } from '../store/appContext';
-import Navbar from '../components/Navbar';
 import { Link } from 'react-router-dom';
 
 const Login = props => {
     const { store, actions } = useContext(Context);
     return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="col-md-12 d-flex justify-content-center mt-2">
-                    <Navbar />
-                </div>
-            </div>
-            <div className="row">
+        <div className="container">
+            <div className="row mt-5">
                 <div className="col-md-4"> </div>
                 <div className="col-md-4">
                     <div className="form card mt-2">
@@ -34,12 +28,12 @@ const Login = props => {
                         <div className="card-footer">
                             <button className="btn btn-primary btn-block" onClick={() => actions.postLogin(props.history)}>Login</button>
                             <div className="d-flex justify-content-end">
-                                <Link to="/signup"><small className="text-muted">Registro</small></Link>
+                                <Link to="/registro"><small className="text-muted">Registro</small></Link>
                             </div>
                         </div>
                     </div>
                     <div className="d-flex justify-content-center pt-1">
-                        <small className="form-text text-muted">Powered by Sensetime®</small>
+                        <small className="form-text text-muted">NoteME®</small>
                     </div>
                 </div>
             </div>

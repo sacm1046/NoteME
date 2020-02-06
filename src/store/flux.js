@@ -68,7 +68,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                             });
                             history.push('/signup')
                         }
-                        
                     })
             },
             handleChange: e => {

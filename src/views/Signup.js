@@ -1,18 +1,11 @@
 import React, { useContext } from 'react';
 import { Context } from '../store/appContext';
-import Navbar from '../components/Navbar';
-
 
 const Signup = props => {
-    const { /*store,*/ actions } = useContext(Context);
+    const { actions } = useContext(Context);
     return (
-        <div className="container-fluid">
-            <div className="row">
-                <div className="col-md-12 d-flex justify-content-center mt-2">
-                    <Navbar />
-                </div>
-            </div>
-            <div className="row">
+        <div className="container">
+            <div className="row mt-5">
                 <div className="col-md-4"></div>
                 <div className="col-md-4">
                     <div className="card mt-2">
@@ -47,7 +40,7 @@ const Signup = props => {
                         </div>
                     </div>
                     <div className="d-flex justify-content-center pt-1">
-                        <small className="form-text text-muted">Powered by Sensetime®</small>
+                        <small className="form-text text-muted">NoteME®</small>
                     </div>
                 </div>
                 <div className="col-md-4"></div>

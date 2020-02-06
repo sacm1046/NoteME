@@ -1,7 +1,7 @@
 import React from 'react'
 import { Context } from '../store/appContext'
-import Calendar from 'react-calendar';
-import moment from 'moment';
+import Calendar from 'react-calendar'
+import moment from 'moment'
 
 class BaseCalendar extends React.Component {
     state = {
