@@ -1,35 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { Component } from 'react';
 import getState from './flux';
 
 export const Context = React.createContext(null);
 
 const injectContext = PassedComponent => {
-    const StoreWrapper = props => {
-        const [state, setState] = useState(
-            getState({
-                getStore: () => state.store,
-                getActions: () => state.actions,
+    class StoreWrapper extends Component {
+        constructor(props) {
+            super(props);
+            //this will be passed as the contenxt value
+            this.state = getState({
+                getStore: () => this.state.store,
+                getActions: () => this.state.actions,
                 setStore: updatedStore =>
-                    setState({
-                        store: Object.assign(state.store, updatedStore),
-                        actions: { ...state.actions }
+                    this.setState({
+                        store: Object.assign(this.state.store, updatedStore)
                     })
-            })
-        )
-        useEffect(() => {
-            /* state.actions.isAuthenticated();
-            if(state.store.isAuthenticated){
-                state.actions.getUsers('/api/users')
-            } */
-        }, [])
-
-        return (
-            <Context.Provider value={state} >
-                <PassedComponent {...props} />
-            </Context.Provider>
-        )
+            });
+        }
+        componentDidMount() {
+            /**
+             * EDIT THIS!
+             * This function is the equivalent to "window.onLoad", it only run once on the entire application lifetime
+             * you should do your ajax requests or fetch api requests here
+             **/
+            this.state.actions.isAuthenticated();
+            if (this.state.store.isAuthenticated) {
+                this.state.actions.getUsers('/api/users');
+                this.state.actions.getAgendas('/api/agendas');
+                this.state.actions.getNotes('/api/notes');
+                this.state.actions.getTexts('/api/texts');
+                this.state.actions.getListas('/api/listas');
+                this.state.actions.getImages('/api/images');
+                this.state.actions.getListlines('/api/listlines');
+            }
+        }
+        render() {
+            // the initial value for the context its not null anymore, but the current state of this component,
+            // the context will have a getStore and setStore functions available then, because they were declared
+            // on the state of this component
+            return (
+                <Context.Provider value={this.state}>
+                    <PassedComponent {...this.props} />
+                </Context.Provider>
+            );
+        }
     }
     return StoreWrapper;
 }
-
 export default injectContext;

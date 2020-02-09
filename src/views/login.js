@@ -3,7 +3,7 @@ import { Context } from '../store/appContext';
 import { Link } from 'react-router-dom';
 
 const Login = props => {
-    const { store, actions } = useContext(Context);
+    const { actions } = useContext(Context);
     return (
         <div className="container">
             <div className="row mt-5">
@@ -14,10 +14,13 @@ const Login = props => {
                             Login
                         </div>
                         <div className="card-body">
-                        <label className={`text-muted ${store.error.msg?"":"d-none"}`}>{!!store.error && store.error.msg}</label>
+                            {/* <label className={`text-muted ${store.errorLogin.msg ? "" : "d-none"}`}>
+                                <small>
+                                    {!!store.errorLogin && store.errorLogin.msg}
+                                </small>
+                            </label> */}
                             <div className="form-group">
-                                
-                                <label htmlFor="username" className="form-label text-muted d-inline">Username:</label>
+                                <label htmlFor="username" className="form-label text-muted">Username:</label>
                                 <input type="text" id="username" name="username" onChange={e => actions.handleChange(e)} className="form-control"></input>
                             </div>
                             <div className="form-group">
