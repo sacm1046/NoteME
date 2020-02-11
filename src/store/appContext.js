@@ -29,9 +29,7 @@ const injectContext = PassedComponent => {
                 this.state.actions.getAgendas('/api/agendas');
                 this.state.actions.getNotes('/api/notes');
                 this.state.actions.getTexts('/api/texts');
-                this.state.actions.getListas('/api/listas');
-                this.state.actions.getImages('/api/images');
-                this.state.actions.getListlines('/api/listlines');
+                this.state.actions.getDate();
             }
         }
         render() {

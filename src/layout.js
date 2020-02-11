@@ -20,7 +20,7 @@ const Layout = props => {
                 <Route exact path="/agenda" component={Agenda} /> 
                 <Route exact path="/admin" component={Admin} />  
                 <Route exact path="/welcome" component={Welcome} />   
-                <Route exact path="/notfound" component={NotFound} />
+                <Route component={NotFound} />
             </Switch>
         </BrowserRouter>
     )

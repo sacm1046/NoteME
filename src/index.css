@@ -116,3 +116,6 @@
   i{
     cursor: pointer;
   }
+  ul{
+    list-style: none;
+  }

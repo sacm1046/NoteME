@@ -4,7 +4,6 @@ import { Context } from '../store/appContext'
 const ModalAdminModificarUser = props => {
     const { store, actions } = useContext(Context)
     useEffect(() => {
-        
     }, [])
     return (
         <div className="modal fade" id="ModalAdminModificarUser" tabIndex="-1" role="dialog"
@@ -19,8 +18,8 @@ const ModalAdminModificarUser = props => {
                     </div>
                     <div>
                         {!!store.users.length > 0 &&
-                            store.users.map((item, i) => {
-                                if ((store.currentUserId) === item.id)
+                            store.users.map((item, i) => {     
+                                if(parseInt(store.currentUserId) === item.id){
                                     return (
                                         <div key={i} className="form-group modal-body">
                                             <label className="d-block text-muted">Nombre</label>
@@ -30,7 +29,7 @@ const ModalAdminModificarUser = props => {
                                             <label className="d-block text-muted">Estado del usuario</label>
                                             <input type="checkbox" id="checkUserActive" name="checkActive" className="" onClick={e => actions.handleCheck(e)} />
                                         </div>
-                                    )
+                                    )}
                             })
                         }
                     </div>

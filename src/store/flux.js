@@ -1,10 +1,30 @@
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
+            ///////////Image////////////////
+            urlImage:'',
+            file:'',
+            errorFile:null,
+            currentFile:'',
+            ///////////Texts////////////////
+            content: "",
+            url: "",
+            errorText: '',
+            time: "",
+            currentText: '',
+            currentTextId: '',
+            Modal: '',
+            ///////////Notes////////////////
+            currentNote: {},
+            titleNote: '',
+            date: '',
+            errorNote: '',
+            currentNoteId: '',
             ///////////Agendas////////////////
             currentAgenda: {},
             titleAgenda: '',
             errorAgenda: "",
+            showWelcome: "",
             ///////////Users//////////////////
             checkAdmin: false,
             checkActive: true,
@@ -27,10 +47,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             agendas: [],
             notes: [],
             texts: [],
-            lists: [],
-            images: [],
-            listlines: [],
-
         },
         actions: {
             /////////////General Functions//////////////
@@ -40,15 +56,42 @@ const getState = ({ getStore, getActions, setStore }) => {
             handleCheck: e => {
                 setStore({ [e.target.name]: e.target.checked })
             },
-            idUser: e => {
+            getUserId: e => {
                 let user = document.getElementById(e.target.id)
-                let getId = parseInt(user.id) + 1
+                let getId = user.id
                 setStore({ currentUserId: getId })
             },
-            preSetModalModUser: () => {
-                document.getElementById("inputUserFullname").value = "prueba"
-                document.getElementById("checkUserAdmin").checked = true;
-                document.getElementById("checkUserActive").checked = true;
+            getNoteId: e => {
+                let note = document.getElementById(e.target.id)
+                let getId = note.id
+                setStore({ currentNoteId: getId })
+            },
+            getDate: () => {
+                let date = new Date()
+                let day = date.getDate()
+                let month = date.getMonth() + 1
+                let year = date.getFullYear()
+                let hour = date.getHours()
+                let minutes = date.getMinutes()
+
+                day = ((day < 10) ? ("0" + day) : day)
+                month = ((month < 10) ? ("0" + month) : month)
+                hour = ((hour < 10) ? ("0" + hour) : hour)
+                minutes = ((minutes < 10) ? ("0" + minutes) : minutes)
+
+                let today = day + '/' + month + '/' + year
+                let hours = hour + ":" + minutes
+
+                setStore({ date: today })
+                setStore({ time: hours })
+            },
+            goLogin: (history) => {
+                history.push('/')
+            },
+            goLogout: (history) => {
+                sessionStorage.removeItem('currentUser')
+                sessionStorage.removeItem('isAuthenticated')
+                history.push('/')
             },
             /////////////Login and Signup Functions//////////////
             postSignup: (history) => {
@@ -72,14 +115,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                             setStore({ errorSignup: data })
                         }
                         else {
-                            setStore({
-                                username: '',
-                                fullname: '',
-                                password: '',
-                                frontpassword: '',
-                                currentUser: data
-                            });
-                            history.push('/')
+                                setStore({
+                                    errorSignup:'',
+                                    username: '',
+                                    fullname: '',
+                                    password: '',
+                                    frontpassword: '',
+                                    currentUser: data,
+                                    
+                                });
+                                history.push('/')
                         }
                     })
             },
@@ -98,24 +143,27 @@ const getState = ({ getStore, getActions, setStore }) => {
                 })
                     .then(resp => resp.json())
                     .then(data => {
-                        console.log(data.msg)
                         if (data.msg) {
                             setStore({ errorLogin: data })
                         }
                         else {
-                            setStore({
-                                username: '',
-                                password: '',
-                                errorLogin: null,
-                                currentUser: data,
-                                isAuthenticated: true
-                            });
-                            sessionStorage.setItem('currentUser', JSON.stringify(data))
-                            sessionStorage.setItem('isAuthenticated', true)
-                            getActions().getUsers('/api/users')
-                            getActions().getAgendas('/api/agendas')
-                            history.push('/welcome')
-                            console.log(store.agendas.length)
+                            if (data.user.active === false) {
+                                setStore({ errorLogin: "Usuario Bloqueado" })
+                            }
+                            else {
+                                setStore({
+                                    username: '',
+                                    password: '',
+                                    errorLogin: null,
+                                    currentUser: data,
+                                    isAuthenticated: true
+                                });
+                                sessionStorage.setItem('currentUser', JSON.stringify(data))
+                                sessionStorage.setItem('isAuthenticated', true)
+                                getActions().getUsers('/api/users')
+                                getActions().getAgendas('/api/agendas')
+                                history.push('/welcome')
+                            }
                         }
                     })
             },
@@ -172,9 +220,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 errorUsers: null,
                                 checkActive: true,
                                 checkAdmin: false,
-                                currentUser: data,
                             });
-                            getActions().getUsers('/api/users')
+                            getActions().getUsers('/api/users/')
                         }
                     })
             },
@@ -270,6 +317,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 currentAgenda: data,
                             });
                             getActions().getAgendas('/api/agendas')
+                            getActions().getNotes('/api/notes')
                         }
                     })
             },
@@ -290,6 +338,106 @@ const getState = ({ getStore, getActions, setStore }) => {
                         })
                     })
             },
+            getNote: (history, url, id) => {
+                const store = getStore();
+                fetch(store.path + url + id, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        setStore({
+                            currentNote: data,
+                        })
+                        history.push('/note')
+                        setStore({ currentNoteId: id })
+                    })
+            },
+            postNotes: (url) => {
+                const store = getStore();
+                const data = {
+                    title: store.titleNote,
+                    date: store.date,
+                    agenda_id: store.currentAgenda.id,
+                }
+                fetch(store.path + url, {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        console.log(data.msg)
+                        if (data.msg) {
+                            setStore({ errorNote: data })
+                        }
+                        else {
+                            setStore({
+                                titleNote: '',
+                                errorNote: null,
+                                currentNote: data,
+                            });
+                            getActions().getNotes('/api/notes')
+                        }
+                    })
+            },
+            putNote: (url, id) => {
+                const store = getStore();
+                const data = {
+                    title: store.titleNote,
+                    agenda_id: store.currentAgenda.id,
+                }
+                fetch(store.path + url + id, {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        console.log(data.msg)
+                        if (data.msg) {
+                            setStore({ errorNote: data })
+                        }
+                        else {
+                            setStore({
+                                titleNote: '',
+                                errorNote: null,
+                                currentNote: data, //!!!!!
+                            });
+                            getActions().getNotes('/api/notes')
+                        }
+                    })
+            },
+            DeleteNote: (url, id) => {
+                const store = getStore();
+                fetch(store.path + url + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        console.log(data.msg)
+                        if (data.msg) {
+                            setStore({ errorNote: data })
+                        }
+                        else {
+                            setStore({ currentNote: '' })
+                            getActions().getNotes('/api/notes')
+                        }
+                    })
+            },
             /////////////Texts Functions//////////////
             getTexts: (url) => {
                 const store = getStore();
@@ -307,10 +455,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                         })
                     })
             },
-            /////////////Lists Functions//////////////
-            getListas: (url) => {
+            getText: (url, id) => {
                 const store = getStore();
-                fetch(store.path + url, {
+                fetch(store.path + url + id, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -320,15 +467,22 @@ const getState = ({ getStore, getActions, setStore }) => {
                     .then(resp => resp.json())
                     .then(data => {
                         setStore({
-                            lists: data
+                            currentText: data,
+                            currentTextId: id
                         })
                     })
             },
-            /////////////List Lines Functions//////////////
-            getListlines: (url) => {
+            postTextContent: (url) => {
                 const store = getStore();
+                const data = {
+                    time: store.time,
+                    date: store.date,
+                    content: store.content,
+                    note_id: store.currentNote.id,
+                }
                 fetch(store.path + url, {
-                    method: 'GET',
+                    method: 'POST',
+                    body: JSON.stringify(data),
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + store.currentUser.access_token
@@ -336,26 +490,109 @@ const getState = ({ getStore, getActions, setStore }) => {
                 })
                     .then(resp => resp.json())
                     .then(data => {
+                        console.log(data.msg)
+                        if (data.msg) {
+                            setStore({ errorText: data })
+                        }
+                        else {
+                            setStore({
+                                time: '',
+                                content: '',
+                                url: '',
+                                errorText: null,
+                                currentText: data,
+                            });
+                            getActions().getTexts('/api/texts')
+                        }
+                    })
+            },
+            putTextContent: (url, id) => {
+                const store = getStore();
+                const data = {
+                    content: store.content,
+                    note_id: store.currentNote.id,
+                }
+                fetch(store.path + url + id, {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+
+                        if (data.msg) {
+                            setStore({ errorNote: data })
+                            console.log(data.msg)
+                        }
+                        else {
+                            setStore({
+                                content: '',
+                                errorText: null,
+                                currentText: data,
+                            });
+                            getActions().getTexts('/api/texts')
+                        }
+                    })
+            },
+            DeleteText: (url, id) => {
+                const store = getStore();
+                fetch(store.path + url + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        console.log(data.msg)
+                        if (data.msg) {
+                            setStore({ errorText: data })
+                        }
+                        else {
+                            setStore({ currentText: '' })
+                            getActions().getTexts('/api/texts')
+                        }
+                    })
+            },
+            /////////////Image Functions//////////////
+            getImg: (url) => {
+                const store = getStore();
+                fetch(store.path + url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
                         setStore({
-                            listlines: data
+                            file: data
                         })
                     })
             },
-            /////////////Images Functions//////////////
-            getImages: (url) => {
+            postImg: (url) => {
                 const store = getStore();
+                let file = document.getElementById("inputFile")
+                console.log(file.files[0])
+
+                let data = new FormData();
+                data.append('file', file.files[0]);
+                console.log(data)
+                
                 fetch(store.path + url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + store.currentUser.access_token
-                    }
+                    method: 'POST',
+                    body: data,
                 })
                     .then(resp => resp.json())
                     .then(data => {
-                        setStore({
-                            images: data
-                        })
+                        if (data.msg) {setStore({ errorFile: data })}
+                        else {
+                            console.log(data)
+                            setStore({errorFile: null, currentFile: data,})}
                     })
             },
         }
