@@ -9,10 +9,11 @@ import ModalUserModificarParrafo from '../components/ModalUserModificarParrafo'
 const Note = props => {
     const { store, actions } = useContext(Context);
     useEffect(() => {
-        if(store.isAuthenticated===false){
-            actions.goLogin(props.history)}
-            actions.getTexts('/api/texts')    
-    }, [])
+        if (store.isAuthenticated === false) {
+            actions.goLogin(props.history)
+        }
+        actions.getTextsNotes('/api/texts/note/', store.currentNote.id)
+    }, [actions, props.history, store.isAuthenticated, store.currentNote.id])
     return (
         <div className="container">
             <div className="row pt-5 mb-3">
@@ -20,11 +21,14 @@ const Note = props => {
                 <div className="col-md-5 form-group d-flex justify-content-between border-bottom text-muted">
                     <h5 className="text-muted">Nota {store.currentNote.title}</h5>
                     <div className='d-flex justify-content-end'>
-                        <Link className='fas fa-caret-square-left text-muted' to='/agenda' onClick={actions.getAgendas('/api/agendas')}></Link>
+                        <Link to="/agenda" className='fas fa-caret-square-left text-muted' /* onClick={actions.getAgendasUser('/api/agendas/user/', store.currentUser.user.id)} */></Link>
                     </div>
                 </div>
-                <div className="col-md-1 ml-1 form-group border-bottom text-muted">
+                <div className="col-md-1 form-group border-bottom text-muted">
                     <h6>{store.date}</h6>
+                </div>
+                <div className="col-md-3 d-flex justify-content-end text-muted">
+                    <i className="fas fa-sign-out-alt" onClick={() => actions.Logout()}><small> SALIR</small></i>
                 </div>
             </div>
             <div className="row">
@@ -33,22 +37,21 @@ const Note = props => {
                     <ul>
                         {!!store.texts.length > 0 &&
                             store.texts.map((item, i) => {
-                                if (item.note.id === store.currentNoteId) {
                                     return (
                                         <li key={i} className="border-bottom text-muted pt-2 pb-4">
                                             <div className="d-flex justify-content-between border-bottom pb-2">
                                                 <small>Fecha:{item.date} - Hora:{item.time}</small>
                                                 <span>
                                                     <i className="fas fa-trash-alt mr-3" onClick={() => actions.DeleteText('/api/texts/', item.id)}></i>
-                                                    <i className="fas fa-pencil-alt mr-3" onClick={() => actions.getText('/api/texts/', item.id)} data-toggle="modal" data-target='#ModalUserModificarParrafo'></i>
-                                                    {/* <i className="fas fa-pencil-alt mr-3" onClick={() => actions.getText('/api/texts/', item.id)} data-toggle="modal" data-target='#ModalUserModificarImage'></i> */}
+                                                    <i className="fas fa-pencil-alt mr-3" onClick={() => actions.getText('/api/texts/', item.id)} data-toggle="modal" data-target={`${item.content == null && item.url != null ? '#ModalUserModificarImage' : '#ModalUserModificarParrafo'}`}></i>
                                                 </span>
                                             </div>
-                                            <div className='pt-2'>{item.content}</div>
-                                            
+                                            <div className={`d-flex justify-content-center pt-3 ${item.content != null && item.url == null ? 'd-none' : ''}`}>
+                                                <img src={item.url} width="400" alt="" />
+                                            </div>
+                                            <div className={`pt-2 ${item.content != null && item.url == null ? '' : 'd-none'}`}>{item.content}</div>
                                         </li>
                                     )
-                                }
                             })
                         }
                     </ul>
@@ -59,9 +62,8 @@ const Note = props => {
                 <div className="col-md-6 d-flex justify-content-between bg-light pt-2">
                     <p className="pl-2 text-muted"><small>Agregar fotografías, textos o listas</small></p>
                     <span className="text-muted d-flex justify-content-end pt-1">
-                        <i className="fas fa-camera mr-3" data-toggle="modal" data-target="#ModalUserSubirImage"></i>
+                        <i className="fas fa-camera mr-3" onClick={() => actions.getDate()} data-toggle="modal" data-target="#ModalUserSubirImage"></i>
                         <i className="fas fa-file-alt mr-3" onClick={() => actions.getDate()} data-toggle="modal" data-target="#ModalUserCrearParrafo"></i>
-                        {/* <i className="fas fa-list-alt mr-1"></i> */}
                     </span>
                 </div>
             </div>

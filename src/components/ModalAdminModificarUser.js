@@ -23,11 +23,11 @@ const ModalAdminModificarUser = props => {
                                     return (
                                         <div key={i} className="form-group modal-body">
                                             <label className="d-block text-muted">Nombre</label>
-                                            <input type="text" id="inputUserFullname" name="fullname" className="form-control" onChange={e => actions.handleChange(e)} placeholder={item.fullname} />
+                                            <input type="text" id="inputUserFullname" name="fullname" className="form-control" onChange={e => actions.handleChange(e)} defaultValue={store.currentUserAdmin.fullname}/>
                                             <label className="d-block text-muted">Poner como administrador</label>
-                                            <input type="checkbox" id="checkUserAdmin" name="checkAdmin" className="" onClick={e => actions.handleCheck(e)} />
+                                            <input type="checkbox" id="checkUserAdmin" defaultChecked={store.currentUserAdmin.isAdmin} name="checkAdmin" className="" onClick={e => actions.handleCheck(e)} />
                                             <label className="d-block text-muted">Estado del usuario</label>
-                                            <input type="checkbox" id="checkUserActive" name="checkActive" className="" onClick={e => actions.handleCheck(e)} />
+                                            <input type="checkbox" id="checkUserActive" defaultChecked={store.currentUserAdmin.active} name="checkActive" className="" onClick={e => actions.handleCheck(e)} />
                                         </div>
                                     )}
                             })

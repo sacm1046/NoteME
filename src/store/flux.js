@@ -2,14 +2,15 @@ const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
             ///////////Image////////////////
-            urlImage:'',
-            file:'',
-            errorFile:null,
-            currentFile:'',
+            show: false,
+            urlImage: '',
+            file: '',
+            errorFile: null,
+            currentFile: '',
             ///////////Texts////////////////
             content: "",
             url: "",
-            errorText: '',
+            errorText: null,
             time: "",
             currentText: '',
             currentTextId: '',
@@ -18,18 +19,19 @@ const getState = ({ getStore, getActions, setStore }) => {
             currentNote: {},
             titleNote: '',
             date: '',
-            errorNote: '',
+            errorNote: null,
             currentNoteId: '',
             ///////////Agendas////////////////
             currentAgenda: {},
             titleAgenda: '',
-            errorAgenda: "",
+            errorAgenda: null,
             showWelcome: "",
             ///////////Users//////////////////
             checkAdmin: false,
             checkActive: true,
             errorUsers: null,
             currentUserId: "",
+            currentUserAdmin:{},
             ///////////Fetch Login and Signup//////////////////
             path: 'http://localhost:5000',
             msg: '',
@@ -42,6 +44,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             errorLogin: null,
             errorSignup: null,
             isAuthenticated: false,
+            duplicate: '',
             ///////////Backend Tables//////////////////
             users: [],
             agendas: [],
@@ -56,10 +59,11 @@ const getState = ({ getStore, getActions, setStore }) => {
             handleCheck: e => {
                 setStore({ [e.target.name]: e.target.checked })
             },
-            getUserId: e => {
+            getUserId: (e, fullname, isAdmin, active) => {
                 let user = document.getElementById(e.target.id)
                 let getId = user.id
                 setStore({ currentUserId: getId })
+                setStore({ currentUserAdmin: {fullname: fullname, isAdmin: isAdmin, active: active}})
             },
             getNoteId: e => {
                 let note = document.getElementById(e.target.id)
@@ -88,10 +92,14 @@ const getState = ({ getStore, getActions, setStore }) => {
             goLogin: (history) => {
                 history.push('/')
             },
-            goLogout: (history) => {
+            Logout: () => {
                 sessionStorage.removeItem('currentUser')
                 sessionStorage.removeItem('isAuthenticated')
-                history.push('/')
+                setStore({
+                    isAuthenticated: false,
+                    currentUser: {},
+                    agendas: [],
+                })
             },
             /////////////Login and Signup Functions//////////////
             postSignup: (history) => {
@@ -115,16 +123,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                             setStore({ errorSignup: data })
                         }
                         else {
-                                setStore({
-                                    errorSignup:'',
-                                    username: '',
-                                    fullname: '',
-                                    password: '',
-                                    frontpassword: '',
-                                    currentUser: data,
-                                    
-                                });
-                                history.push('/')
+                            setStore({
+                                errorSignup: '',
+                                username: '',
+                                fullname: '',
+                                password: '',
+                                frontpassword: '',
+                                duplicate: '',
+                                currentUser: data,
+                            })
+                            history.push('/')
                         }
                     })
             },
@@ -161,7 +169,11 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 sessionStorage.setItem('currentUser', JSON.stringify(data))
                                 sessionStorage.setItem('isAuthenticated', true)
                                 getActions().getUsers('/api/users')
-                                getActions().getAgendas('/api/agendas')
+                                getActions().getAgendasUser('/api/agendas/user/', store.currentUser.user.id)
+                                setStore({
+                                    currentAgenda: store.agendas[0]
+                                })
+                                console.log(store.agendas[0])
                                 history.push('/welcome')
                             }
                         }
@@ -243,9 +255,26 @@ const getState = ({ getStore, getActions, setStore }) => {
                         history.push('/agenda')
                     })
             },
-            getAgendas: (url) => {
+            /*   getAgendas: (url) => {
+                 const store = getStore();
+                 fetch(store.path + url, {
+                     method: 'GET',
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': 'Bearer ' + store.currentUser.access_token
+                     }
+                 })
+                     .then(resp => resp.json())
+                     .then(data => {
+                          setStore({
+                             agendas: data,
+                         }) 
+                     })
+             }, */
+
+            getAgendasUser: (url, idUser) => {
                 const store = getStore();
-                fetch(store.path + url, {
+                fetch(store.path + url + idUser, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -286,7 +315,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 currentAgenda: data,
                             });
                             history.push('/agenda')
-                            getActions().getAgendas('/api/agendas')
+                            getActions().getAgendasUser('/api/agendas/user/', store.currentUser.user.id)
                         }
                     })
             },
@@ -322,7 +351,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     })
             },
             /////////////Notes Functions//////////////
-            getNotes: (url) => {
+            /* getNotes: (url) => {
                 const store = getStore();
                 fetch(store.path + url, {
                     method: 'GET',
@@ -337,7 +366,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                             notes: data
                         })
                     })
-            },
+            }, */
+
             getNote: (history, url, id) => {
                 const store = getStore();
                 fetch(store.path + url + id, {
@@ -352,8 +382,25 @@ const getState = ({ getStore, getActions, setStore }) => {
                         setStore({
                             currentNote: data,
                         })
-                        history.push('/note')
                         setStore({ currentNoteId: id })
+                        history.push('/note')
+                    })
+            },
+            getNotesAgenda: (url, idAgenda) => {
+                const store = getStore();
+                fetch(store.path + url + idAgenda, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        setStore({
+                            notes: data,
+
+                        })
                     })
             },
             postNotes: (url) => {
@@ -383,7 +430,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 errorNote: null,
                                 currentNote: data,
                             });
-                            getActions().getNotes('/api/notes')
+                            getActions().getNotesAgenda('/api/notes/agenda/', store.currentAgenda.id)
                         }
                     })
             },
@@ -434,12 +481,12 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                         else {
                             setStore({ currentNote: '' })
-                            getActions().getNotes('/api/notes')
+                            getActions().getNotesAgenda('/api/notes/agenda/', store.currentAgenda.id)
                         }
                     })
             },
             /////////////Texts Functions//////////////
-            getTexts: (url) => {
+            /* getTexts: (url) => {
                 const store = getStore();
                 fetch(store.path + url, {
                     method: 'GET',
@@ -454,7 +501,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                             texts: data
                         })
                     })
-            },
+            }, */
+
             getText: (url, id) => {
                 const store = getStore();
                 fetch(store.path + url + id, {
@@ -469,6 +517,23 @@ const getState = ({ getStore, getActions, setStore }) => {
                         setStore({
                             currentText: data,
                             currentTextId: id
+                        })
+                    })
+            },
+            getTextsNotes: (url, idNote) => {
+                const store = getStore();
+                fetch(store.path + url + idNote, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        setStore({
+                            texts: data,
+
                         })
                     })
             },
@@ -502,7 +567,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 errorText: null,
                                 currentText: data,
                             });
-                            getActions().getTexts('/api/texts')
+                            getActions().getTextsNotes('/api/texts/note/', store.currentNote.id)
                         }
                     })
             },
@@ -533,7 +598,75 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 errorText: null,
                                 currentText: data,
                             });
-                            getActions().getTexts('/api/texts')
+                            getActions().getTextsNotes('/api/texts/note/', store.currentNote.id)
+                        }
+                    })
+            },
+            postTextImage: (url1, url2) => {
+                const store = getStore();
+                const data = {
+                    time: store.time,
+                    date: store.date,
+                    url: store.path + url2 + store.currentFile,
+                    note_id: store.currentNote.id,
+                }
+                fetch(store.path + url1, {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        console.log(data.msg)
+                        if (data.msg) {
+                            setStore({ errorText: data })
+                        }
+                        else {
+                            setStore({
+                                time: '',
+                                content: '',
+                                url: '',
+                                errorText: null,
+                                currentText: data,
+                                currentFile: "",
+                                show: false,
+                            });
+                            getActions().getTextsNotes('/api/texts/note/', store.currentNote.id)
+                        }
+                    })
+            },
+            putTextImage: (url1, url2, id) => {
+                const store = getStore();
+                const data = {
+                    url: store.path + url2 + store.currentFile,
+                    note_id: store.currentNote.id,
+                }
+                fetch(store.path + url1 + id, {
+                    method: 'PUT',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + store.currentUser.access_token
+                    }
+                })
+                    .then(resp => resp.json())
+                    .then(data => {
+                        if (data.msg) {
+                            setStore({ errorText: data })
+                            console.log(data.msg)
+                        }
+                        else {
+                            setStore({
+                                url: '',
+                                errorText: null,
+                                currentText: data,
+                                currentFile: "",
+                                show: false,
+                            });
+                            getActions().getTextsNotes('/api/texts/note/', store.currentNote.id)
                         }
                     })
             },
@@ -554,46 +687,45 @@ const getState = ({ getStore, getActions, setStore }) => {
                         }
                         else {
                             setStore({ currentText: '' })
-                            getActions().getTexts('/api/texts')
+                            getActions().getTextsNotes('/api/texts/note/', store.currentNote.id)
                         }
                     })
             },
             /////////////Image Functions//////////////
-            getImg: (url) => {
-                const store = getStore();
-                fetch(store.path + url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                    .then(resp => resp.json())
-                    .then(data => {
-                        setStore({
-                            file: data
-                        })
-                    })
+            show: () => {
+                setStore({ show: true })
             },
             postImg: (url) => {
                 const store = getStore();
-                let file = document.getElementById("inputFile")
-                console.log(file.files[0])
 
+                let file = document.getElementById("inputFile")
                 let data = new FormData();
                 data.append('file', file.files[0]);
-                console.log(data)
-                
+                setStore({ currentFile: file.files[0].name })
+                console.log(store.currentFile)
+
                 fetch(store.path + url, {
                     method: 'POST',
                     body: data,
                 })
                     .then(resp => resp.json())
-                    .then(data => {
-                        if (data.msg) {setStore({ errorFile: data })}
-                        else {
-                            console.log(data)
-                            setStore({errorFile: null, currentFile: data,})}
-                    })
+                    .then(data => { })
+            },
+            postImg_putTextImage: (url) => {
+                const store = getStore();
+
+                let file = document.getElementById("inputFilePut")
+                let data = new FormData();
+                data.append('file', file.files[0]);
+                setStore({ currentFile: file.files[0].name })
+                console.log(store.currentFile)
+
+                fetch(store.path + url, {
+                    method: 'POST',
+                    body: data,
+                })
+                    .then(resp => resp.json())
+                    .then(data => { })
             },
         }
     }

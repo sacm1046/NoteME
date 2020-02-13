@@ -26,9 +26,9 @@ const injectContext = PassedComponent => {
             this.state.actions.isAuthenticated();
             if (this.state.store.isAuthenticated) {
                 this.state.actions.getUsers('/api/users');
-                this.state.actions.getAgendas('/api/agendas');
-                this.state.actions.getNotes('/api/notes');
-                this.state.actions.getTexts('/api/texts');
+                this.state.actions.getAgendasUser('/api/agendas/user/', this.state.store.currentUser.user.id);
+                this.state.actions.getNotesAgenda('/api/notes/user/', this.state.store.currentAgenda.id);
+                this.state.actions.getTextsNotes('/api/texts/note/', this.state.store.currentNote.id)
                 this.state.actions.getDate();
             }
         }

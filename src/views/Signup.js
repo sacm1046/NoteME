@@ -13,7 +13,7 @@ const Signup = props => {
                             Registro
                     </div>
                         <div className="card-body text-muted">
-                        {store.errorSignup===null?"":store.errorSignup==="Contraseñas diferentes"?store.errorSignup:store.errorSignup.msg}
+                            {store.errorSignup === null ? "" : store.errorSignup === "Contraseñas diferentes" ? store.errorSignup : store.errorSignup.msg}
                             <div className="form-group">
                                 <label className="text-muted">Email</label>
                                 <input type="email" name="username" className="form-control" onChange={e => actions.handleChange(e)} />
@@ -33,7 +33,7 @@ const Signup = props => {
                             </div>
                         </div>
                         <div className="card-footer d-flex justify-content-end">
-                            <button type="submit" className="btn btn-primary btn-block" onClick={store.password!==store.frontpassword?store.errorSignup='Contraseñas diferentes':() => actions.postSignup(props.history)}>Crear Usuario</button>
+                            <button type="submit" className="btn btn-primary btn-block" onClick={store.password === store.frontpassword ? () => actions.postSignup(props.history) : ""}>Crear Usuario</button>
                         </div>
                     </div>
                     <div className="d-flex justify-content-center pt-1">

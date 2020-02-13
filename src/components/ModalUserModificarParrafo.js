@@ -5,7 +5,7 @@ const ModalUserModificarParrafo = props => {
     const { store, actions } = useContext(Context);
     useEffect(() => {
         document.getElementById('tt').value = store.currentText.content
-    }, [])
+    }, [store.currentText.content])
     return (
         <div className="modal fade" id="ModalUserModificarParrafo" tabIndex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
