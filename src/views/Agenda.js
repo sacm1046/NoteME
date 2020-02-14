@@ -24,7 +24,7 @@ const Agenda = props => {
                     </div>
                 </div>
                 <div className="col-md-3 d-flex justify-content-end text-muted">
-                    <i className="fas fa-sign-out-alt" onClick={()=>actions.Logout()}><small> SALIR</small></i>
+                    <i className="fas fa-sign-out-alt" onClick={() => actions.Logout()}><small> SALIR</small></i>
                 </div>
             </div>
             <div className="row">
@@ -42,14 +42,14 @@ const Agenda = props => {
                     <ul>
                         {!!store.notes.length > 0 &&
                             store.notes.map((item, i) => {
-                                    return (
-                                        <li key={i} className="border-bottom text-muted d-flex justify-content-between pt-2 pb-2">
-                                            <i className='text-muted' onClick={() => actions.getNote(props.history, '/api/notes/', item.id)} >{item.title}</i>
-                                            <span>
-                                                <i className="fas fa-trash-alt mr-3" onClick={() => actions.DeleteNote('/api/notes/', item.id)}></i>
-                                                <i className="fas fa-pencil-alt mr-3" id={item.id} onClick={e => actions.getNoteId(e)} data-toggle="modal" data-target="#ModalUserModificarNota"></i>
-                                            </span>
-                                        </li>)
+                                return (
+                                    <li key={i} className="border-bottom text-muted d-flex justify-content-between pt-2 pb-2">
+                                        <i className='text-muted' onClick={() => actions.getNote(props.history, '/api/notes/', item.id)} >{item.title}</i>
+                                        <span>
+                                            <i className="fas fa-trash-alt mr-3" onClick={() => actions.DeleteNote('/api/notes/', item.id)}></i>
+                                            <i className="fas fa-pencil-alt mr-3" id={item.id} onClick={(e) => actions.getNoteId(e)} data-toggle="modal" data-target="#ModalUserModificarNota"></i>
+                                        </span>
+                                    </li>)
                             })
                         }
                     </ul>

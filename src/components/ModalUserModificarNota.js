@@ -1,9 +1,10 @@
-import React, {useContext} from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Context } from '../store/appContext'
 
 const ModalUserModificarNota = props => {
     const { store, actions } = useContext(Context);
-    
+    useEffect(() => {
+    }, [])
     return (
         <div className="modal fade" id="ModalUserModificarNota" tabIndex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">

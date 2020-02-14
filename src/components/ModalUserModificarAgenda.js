@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { Context } from '../store/appContext'
 
 const ModalUserModificarAgenda = props => {
-    const { actions } = useContext(Context);
+    const { store, actions } = useContext(Context);
     
     return (
         <div className="modal fade" id="ModalUserModificarAgenda" tabIndex="-1" role="dialog"
@@ -18,7 +18,7 @@ const ModalUserModificarAgenda = props => {
                     <div>
                         <div className="form-group modal-body">
                             <label className="d-block text-muted">Asigne un nuevo nombre a su agenda</label>
-                            <input type="text" name="titleAgenda" className="form-control" onChange={e => actions.handleChange(e)}/>
+                            <input type="text" defaultValue={store.currentAgenda.title} name="titleAgenda" className="form-control" onChange={e => actions.handleChange(e)}/>
                         </div>
                     </div>
                     <div className="modal-footer d-flex justify-content-end">

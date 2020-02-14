@@ -14,13 +14,15 @@ const Login = props => {
                             Login
                         </div>
                         <div className="card-body text-muted">
-                            {store.errorLogin===null?"":store.errorLogin==="Usuario Bloqueado"?store.errorLogin:store.errorLogin.msg}
+                            <div className='text-white bg-danger rounded-pill text-center'>
+                                <small>{store.errorLogin===null?"":store.errorLogin==="Usuario Bloqueado"?store.errorLogin:store.errorLogin.msg}</small>
+                            </div>
                             <div className="form-group">
-                                <label htmlFor="username" className="form-label text-muted">Username:</label>
+                                <label htmlFor="username" className="form-label text-muted">Email:</label>
                                 <input type="text" id="username" name="username" onChange={e => actions.handleChange(e)} className="form-control"></input>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="password" className="form-label text-muted">Password:</label>
+                                <label htmlFor="password" className="form-label text-muted">Contraseña:</label>
                                 <input type="password" id="password" name="password" onChange={e => actions.handleChange(e)} className="form-control"></input>
                             </div>
                         </div>

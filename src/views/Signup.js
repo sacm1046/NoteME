@@ -13,7 +13,9 @@ const Signup = props => {
                             Registro
                     </div>
                         <div className="card-body text-muted">
-                            {store.errorSignup === null ? "" : store.errorSignup === "Contraseñas diferentes" ? store.errorSignup : store.errorSignup.msg}
+                                    <div className='text-white bg-danger rounded-pill text-center'>
+                                        <small>{store.errorSignup === null ? "" : store.errorSignup === "Contraseñas diferentes" ? store.errorSignup : store.errorSignup.msg}</small>
+                                    </div>
                             <div className="form-group">
                                 <label className="text-muted">Email</label>
                                 <input type="email" name="username" className="form-control" onChange={e => actions.handleChange(e)} />
@@ -24,16 +26,12 @@ const Signup = props => {
                             </div>
                             <div className="form-group">
                                 <label className="text-muted">Contraseña</label>
-                                <input type="password" name="frontpassword" className="form-control" onChange={e => actions.handleChange(e)} />
-                            </div>
-                            <div className="form-group">
-                                <label className="text-muted">Repita su contraseña</label>
                                 <input type="password" name="password" className="form-control" onChange={e => actions.handleChange(e)} />
                                 <small className="form-text text-muted">*Todos los campos son obligatorios</small>
                             </div>
                         </div>
                         <div className="card-footer d-flex justify-content-end">
-                            <button type="submit" className="btn btn-primary btn-block" onClick={store.password === store.frontpassword ? () => actions.postSignup(props.history) : ""}>Crear Usuario</button>
+                            <button type="submit" className="btn btn-primary btn-block" onClick={() => actions.postSignup(props.history)}>Crear Usuario</button>
                         </div>
                     </div>
                     <div className="d-flex justify-content-center pt-1">

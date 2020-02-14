@@ -17,6 +17,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             Modal: '',
             ///////////Notes////////////////
             currentNote: {},
+            updTitleNote: "",
             titleNote: '',
             date: '',
             errorNote: null,
@@ -31,7 +32,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             checkActive: true,
             errorUsers: null,
             currentUserId: "",
-            currentUserAdmin:{},
+            currentUserAdmin: {},
             ///////////Fetch Login and Signup//////////////////
             path: 'http://localhost:5000',
             msg: '',
@@ -63,12 +64,15 @@ const getState = ({ getStore, getActions, setStore }) => {
                 let user = document.getElementById(e.target.id)
                 let getId = user.id
                 setStore({ currentUserId: getId })
-                setStore({ currentUserAdmin: {fullname: fullname, isAdmin: isAdmin, active: active}})
+                setStore({ currentUserAdmin: { fullname: fullname, isAdmin: isAdmin, active: active } })
             },
-            getNoteId: e => {
+            getNoteId: (e) => {
                 let note = document.getElementById(e.target.id)
                 let getId = note.id
-                setStore({ currentNoteId: getId })
+                setStore({
+                    currentNoteId: getId,
+                })
+
             },
             getDate: () => {
                 let date = new Date()
@@ -173,7 +177,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 setStore({
                                     currentAgenda: store.agendas[0]
                                 })
-                                console.log(store.agendas[0])
                                 history.push('/welcome')
                             }
                         }
@@ -255,23 +258,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                         history.push('/agenda')
                     })
             },
-            /*   getAgendas: (url) => {
-                 const store = getStore();
-                 fetch(store.path + url, {
-                     method: 'GET',
-                     headers: {
-                         'Content-Type': 'application/json',
-                         'Authorization': 'Bearer ' + store.currentUser.access_token
-                     }
-                 })
-                     .then(resp => resp.json())
-                     .then(data => {
-                          setStore({
-                             agendas: data,
-                         }) 
-                     })
-             }, */
-
             getAgendasUser: (url, idUser) => {
                 const store = getStore();
                 fetch(store.path + url + idUser, {
@@ -345,29 +331,12 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 errorAgenda: null,
                                 currentAgenda: data,
                             });
-                            getActions().getAgendas('/api/agendas')
-                            getActions().getNotes('/api/notes')
+                            getActions().getNotesAgenda('/api/notes/user/', store.currentAgenda.id)
+                            getActions().getTextsNotes('/api/texts/note/', store.currentNote.id)
                         }
                     })
             },
             /////////////Notes Functions//////////////
-            /* getNotes: (url) => {
-                const store = getStore();
-                fetch(store.path + url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + store.currentUser.access_token
-                    }
-                })
-                    .then(resp => resp.json())
-                    .then(data => {
-                        setStore({
-                            notes: data
-                        })
-                    })
-            }, */
-
             getNote: (history, url, id) => {
                 const store = getStore();
                 fetch(store.path + url + id, {
@@ -459,8 +428,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                                 titleNote: '',
                                 errorNote: null,
                                 currentNote: data, //!!!!!
+                                updTitleNote: '',
                             });
-                            getActions().getNotes('/api/notes')
+                            getActions().getNotesAgenda('/api/notes/agenda/', store.currentAgenda.id)
                         }
                     })
             },
@@ -486,23 +456,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                     })
             },
             /////////////Texts Functions//////////////
-            /* getTexts: (url) => {
-                const store = getStore();
-                fetch(store.path + url, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + store.currentUser.access_token
-                    }
-                })
-                    .then(resp => resp.json())
-                    .then(data => {
-                        setStore({
-                            texts: data
-                        })
-                    })
-            }, */
-
             getText: (url, id) => {
                 const store = getStore();
                 fetch(store.path + url + id, {
