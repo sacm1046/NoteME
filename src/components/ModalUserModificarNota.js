@@ -11,7 +11,7 @@ const ModalUserModificarNota = props => {
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        Modificar Agenda
+                        Modificar Nota
                         <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
