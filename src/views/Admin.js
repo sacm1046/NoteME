@@ -24,7 +24,7 @@ const Admin = props => {
                     <div className="row mb-3">
                         <div className="col-md-12 form-group d-flex justify-content-between border-bottom text-muted">
                             <h5 className="text-muted">Panel de administración</h5>
-                            <Link className='fas fa-caret-square-left mr-3 text-muted' to='/welcome' onClick={() => actions.getAgendasUser('/api/agendas/user/', store.currentUser.user.id)}></Link>
+                            <Link className='fas fa-caret-square-left mr-3 text-muted' to='/welcome' /* onClick={() => actions.getAgendasUser('/api/agendas/user/', store.currentUser.user.id)} */></Link>
                         </div>
                     </div>
                     <div className="row">

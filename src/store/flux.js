@@ -34,7 +34,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             currentUserId: "",
             currentUserAdmin: {},
             ///////////Fetch Login and Signup//////////////////
-            path: 'http://localhost:5000',
+            path: 'http://sacm1046.pythonanywhere.com',
             msg: '',
             aviso: '',
             username: '',
