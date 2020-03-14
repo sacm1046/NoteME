@@ -16,8 +16,8 @@ const Welcome = props => {
                     (
                         <div className="container">
                             <div className="row mt-5">
-                                <div className="col-md-3"></div>
-                                <div className="col-md-6 letter">
+                                <div className="col-md-3 col-1"></div>
+                                <div className="col-md-6 col-10 letter">
                                     <div className="row mb-3">
                                         <div className="col-md-12 form-group d-flex justify-content-between border-bottom text-muted">
                                             <h5 className="text-muted">Bienvenido {store.isAuthenticated === false ? "" : store.currentUser.user.fullname}</h5>
@@ -33,11 +33,11 @@ const Welcome = props => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-3 text-right mb-4">
+                                <div className="col-md-3 col-7 text-right mt-3">
                                     <small onClick={() => actions.Logout()} className="text-danger font-weight-bold logout pt-1 pb-2 pl-3 pr-3 bg-light rounded-pill"><i className="fas fa-sign-out-alt text-danger"></i></small>
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row mb-5">
                                 <div className="col-md-12 d-flex justify-content-center">
                                     <small className="form-text text-light">NoteME®</small>
                                 </div>
@@ -46,8 +46,8 @@ const Welcome = props => {
                     ) : (
                         <div className="container">
                             <div className="row mt-5">
-                                <div className="col-md-3"></div>
-                                <div className="col-md-6 letter">
+                                <div className="col-md-3 col-1"></div>
+                                <div className="col-md-6 col-10 letter">
                                     <div className="row mb-2">
                                         <div className="col-md-12 form-group d-flex justify-content-between border-bottom text-muted">
                                             <h5 className="text-muted">Bienvenido {store.isAuthenticated === false ? "" : store.currentUser.user.fullname}</h5>
@@ -65,11 +65,11 @@ const Welcome = props => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-md-3 text-right mb-4">
+                                <div className="col-md-3 col-7 text-right mt-3">
                                     <small onClick={() => actions.Logout()} className="text-danger font-weight-bold logout pt-1 pb-2 pl-3 pr-3 bg-light rounded-pill"><i className="fas fa-sign-out-alt text-danger"></i></small>
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row mb-5">
                                 <div className="col-md-12 d-flex justify-content-center">
                                     <small className="form-text text-light">NoteME®</small>
                                 </div>

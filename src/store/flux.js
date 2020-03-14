@@ -655,14 +655,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                 let data = new FormData();
                 data.append('file', file.files[0]);
                 setStore({ currentFile: file.files[0].name })
-                console.log(store.currentFile)
 
                 fetch(store.path + url, {
                     method: 'POST',
                     body: data,
                 })
                     .then(resp => resp.json())
-                    .then(data => { })
+                    .then(data => { 
+                    })
             },
             postImg_putTextImage: (url) => {
                 const store = getStore();
@@ -678,7 +678,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                     body: data,
                 })
                     .then(resp => resp.json())
-                    .then(data => { })
+                    .then(data => { 
+                    })
             },
         }
     }

@@ -17,8 +17,8 @@ const Note = props => {
     return (
         <div className="container">
             <div className="row mt-5">
-                <div className="col-md-3"></div>
-                <div className="col-md-6 letter">
+                <div className="col-md-3 col-1"></div>
+                <div className="col-md-6 col-10 letter">
                     <div className="row mb-3 pt-3">
                         <div className="col-md-12 form-group d-flex justify-content-between border-bottom text-muted">
                             <h5 className="text-muted">Nota {store.currentNote.title}</h5>
@@ -46,7 +46,7 @@ const Note = props => {
                                                 <div className={`d-flex justify-content-center pt-3 ${item.content != null && item.url == null ? 'd-none' : ''}`}>
                                                     <img src={item.url} width="300" alt="" className="" />
                                                 </div>
-                                                <div className={`pt-2 ${item.content != null && item.url == null ? '' : 'd-none'}`}>{item.content}</div>
+                                                <div className={`pt-2 ${item.content != null && item.url == null ? '' : 'd-none'}`}><p className='pr-3' align="justify">{item.content}</p></div>
                                             </li>
                                         )
                                     })
@@ -64,7 +64,7 @@ const Note = props => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-3 text-right mb-4">
+                <div className="col-md-3 col-7 mt-3 text-right">
                     <small onClick={() => actions.Logout()} className="text-danger font-weight-bold logout pt-1 pb-2 pl-3 pr-3 bg-light rounded-pill"><i className="fas fa-sign-out-alt text-danger"></i></small>
                 </div>
             </div>

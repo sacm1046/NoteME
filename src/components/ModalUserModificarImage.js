@@ -23,7 +23,7 @@ const ModalUserModificarImage = props => {
                                   
                                 </div>
                                 <div className="input-group-append">
-                                    <button onClick={store.show===false?"":() => actions.postImg_putTextImage('/upload')} className="btn btn-success">Subir Imagen</button>
+                                    <button onClick={store.show===false?null:() => actions.postImg_putTextImage('/upload')} className="btn btn-success">Subir Imagen</button>
                                 </div>
                             </div>
                             <div className=''><small className="text-muted">{store.currentFile === "" ? "" : store.currentFile}</small></div>

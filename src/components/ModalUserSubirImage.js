@@ -26,7 +26,7 @@ const ModalUserSubirImage = props => {
                                     <label className="custom-file-label" for="inputGroupFile03">Seleccione Imagen</label>                              
                                 </div>
                                 <div className="input-group-append">
-                                    <button onClick={store.show===false?"":() => actions.postImg('/upload')} className="btn btn-success">Subir Imagen</button>
+                                    <button onClick={store.show===false?null:() => actions.postImg('/upload')} className="btn btn-success">Subir Imagen</button>
                                 </div>    
                             </div>
                             <div className=''><small className="text-muted">{store.currentFile === "" ? "" : store.currentFile}</small></div>

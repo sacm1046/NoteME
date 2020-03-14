@@ -7,8 +7,8 @@ const Login = props => {
     return (
         <div className="container">
             <div className="row mt-5" id="login">
-                <div className="col-md-4"> </div>
-                <div className="col-md-4 letter">
+                <div className="col-md-4 col-1"> </div>
+                <div className="col-md-4 col-10 letter">
                     <div className="form mt-2">
                         <div className="text-muted border-bottom pb-2">
                             <h5>Login</h5>

@@ -15,8 +15,8 @@ const Agenda = props => {
     return (
         <div className="container">
             <div className="row mt-5">
-                <div className="col-md-3"></div>
-                <div className="col-md-6 letter">
+                <div className="col-md-3 col-1"></div>
+                <div className="col-md-6 col-10 letter">
                     <div className="row mb-3">
                         <div className="col-md-12 form-group d-flex justify-content-between border-bottom text-muted pt-3">
                             <h5 className="text-muted">Agenda {store.isAuthenticated === false ? "" : store.currentAgenda.title}</h5>
@@ -53,7 +53,7 @@ const Agenda = props => {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-3 text-right">
+                <div className="col-md-3 col-7 mt-3 text-right">
                     <small onClick={() => actions.Logout()} className="text-danger font-weight-bold logout pt-1 pb-2 pl-3 pr-3 bg-light rounded-pill"><i className="fas fa-sign-out-alt text-danger"></i></small>
                 </div>
             </div>
